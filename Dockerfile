@@ -37,7 +37,7 @@ RUN conda install setuptools \
 &&  rm /opt/conda/pkgs/* -rf \
 &&  pip install pythesint \
 &&  python -c 'import pythesint; pythesint.update_all_vocabularies()' \
-&&  wget -nc -P /usr/share/MOD44W ftp://ftp.nersc.no/nansat/test_data/MOD44W.tgz \
+&&  wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw/master/MOD44W.tgz \
 &&  tar -xzf /usr/share/MOD44W/MOD44W.tgz -C /usr/share/MOD44W/ \
 &&  rm /usr/share/MOD44W/MOD44W.tgz
 
