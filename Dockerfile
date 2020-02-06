@@ -18,6 +18,7 @@ RUN conda install setuptools \
 &&  conda update conda \
 &&  conda config --add channels conda-forge  \
 &&  conda install -y \
+    cartopy=0.17.0 \
     coverage=5.0.3 \
     coveralls=1.10.0 \
     gdal=2.4.2 \
