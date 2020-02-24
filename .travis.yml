@@ -31,5 +31,5 @@ deploy:
   provider: script
   on:
     tags: true
-  script: /bin/bash docker_push.sh "${TRAVIS_TAG}" latest
+  script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
 ...
