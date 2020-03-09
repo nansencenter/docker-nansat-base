@@ -13,23 +13,42 @@ env:
     - IMAGE_NAME="${DOCKER_ORG}/nansat_base"
     - DOCKER_TMP_TAG='tmp'
 
-install:
-  - docker pull "${IMAGE_NAME}" || true
+jobs:
+  include:
+    - stage: 'Build Docker images'
+      install:
+        - docker pull "${IMAGE_NAME}" || true
+      script:
+        - >
+          docker build .
+          --cache-from "${IMAGE_NAME}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
+        # Basic test
+        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
+      before_deploy:
+        - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+      deploy:
+        provider: script
+        on:
+          tags: true
+        script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
 
-script:
-  - >
-    docker build .
-    --cache-from "${IMAGE_NAME}"
-    -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
-  # Basic test
-  - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
-
-before_deploy:
-  - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
-
-deploy:
-  provider: script
-  on:
-    tags: true
-  script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
+    - env:
+        - DOCKER_TAG_SUFFIX='-slim'
+      install:
+        - docker pull "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}" || true
+      script:
+        - >
+          docker build .
+          --cache-from "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
+        # Basic test
+        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
+      before_deploy:
+        - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+      deploy:
+        provider: script
+        on:
+          tags: true
+        script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}${DOCKER_TAG_SUFFIX}" "latest${DOCKER_TAG_SUFFIX}"
 ...
