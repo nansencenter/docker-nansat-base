@@ -16,6 +16,7 @@ env:
 jobs:
   include:
     - stage: 'Build Docker images'
+      name: 'Build standard image'
       install:
         - docker pull "${IMAGE_NAME}" || true
       script:
@@ -33,7 +34,8 @@ jobs:
           tags: true
         script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
 
-    - env:
+    - name: 'Build slim image'
+      env:
         - DOCKER_TAG_SUFFIX='-slim'
       install:
         - docker pull "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}" || true
