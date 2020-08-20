@@ -42,6 +42,7 @@ jobs:
       script:
         - >
           docker build .
+          -f Dockerfile_slim
           --cache-from "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}"
           -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
         # Basic test
