@@ -32,26 +32,34 @@ jobs:
         provider: script
         on:
           tags: true
-        script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
+        script: /bin/bash docker_push.sh "${IMAGE_NAME}" ''
 
     - name: 'Build slim image'
       env:
-        - DOCKER_TAG_SUFFIX='-slim'
+        - COMPILE_STAGE_SUFFIX='-compile-stage'
+        - SLIM_SUFFIX='-slim'
       install:
-        - docker pull "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}" || true
+        - docker pull "${IMAGE_NAME}:latest${COMPILE_STAGE_SUFFIX}" || true
+        - docker pull "${IMAGE_NAME}:latest${SLIM_SUFFIX}" || true
       script:
         - >
           docker build .
+          -f Dockerfile_slim --target builder
+          --cache-from "${IMAGE_NAME}:latest${COMPILE_STAGE_SUFFIX}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}${COMPILE_STAGE_SUFFIX}"
+        - >
+          docker build .
           -f Dockerfile_slim
-          --cache-from "${IMAGE_NAME}:latest${DOCKER_TAG_SUFFIX}"
-          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
+          --cache-from "${IMAGE_NAME}:${DOCKER_TMP_TAG}${COMPILE_STAGE_SUFFIX}"
+          --cache-from "${IMAGE_NAME}:latest${SLIM_SUFFIX}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}${SLIM_SUFFIX}"
         # Basic test
-        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
+        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}${SLIM_SUFFIX}" python -c 'import gdal'
       before_deploy:
         - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
       deploy:
         provider: script
         on:
           tags: true
-        script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}${DOCKER_TAG_SUFFIX}" "latest${DOCKER_TAG_SUFFIX}"
+        script: /bin/bash docker_push.sh "${IMAGE_NAME}" "${COMPILE_STAGE_SUFFIX}" "${SLIM_SUFFIX}"
 ...
