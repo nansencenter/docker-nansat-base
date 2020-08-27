@@ -18,22 +18,21 @@ RUN conda install setuptools \
 &&  conda update conda \
 &&  conda config --add channels conda-forge  \
 &&  conda install -y \
-    cartopy=0.17.0 \
-    coverage=5.0.3 \
-    coveralls=1.10.0 \
-    gdal=2.4.2 \
-    ipdb=0.12.3 \
-    ipython=7.11.1 \
-    matplotlib=3.1.2 \
-    mock=3.0.5 \
-    netcdf4=1.5.1.2 \
+    cartopy=0.18.0 \
+    coverage=5.2.1 \
+    coveralls=2.1.2 \
+    gdal=3.1.2 \
+    ipdb=0.13.3 \
+    ipython=7.17.0 \
+    matplotlib=3.3.1 \
+    mock=4.0.2 \
+    netcdf4=1.5.4 \
     nose=1.3.7 \
-    numpy=1.17.5 \
-    pillow=7.0.0 \
+    numpy=1.19.1 \
+    pillow=7.2.0 \
     python-dateutil=2.8.1 \
-    scipy=1.4.1 \
-    urllib3=1.25.7 \
-&&  conda remove qt pyqt --force \
+    scipy=1.5.2 \
+    urllib3=1.25.10 \
 &&  conda clean -a -y \
 &&  rm /opt/conda/pkgs/* -rf \
 &&  pip install pythesint==1.4.10 \
