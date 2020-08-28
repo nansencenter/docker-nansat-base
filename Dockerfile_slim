@@ -13,22 +13,22 @@ RUN apt update && \
     curl \
     file \
     g++ \
-    libcurl4-gnutls-dev \
-    libdap-dev \
-    libexpat1-dev \
-    libgeos-dev \
-    libhdf4-dev \
-    libhdf5-dev \
-    libjpeg-dev \
-    libnetcdf-dev \
-    libpq-dev \
-    libproj-dev \
-    libspatialite-dev \
-    libsqlite3-dev \
-    libssl-dev \
-    libwebp-dev \
-    libxerces-c-dev \
-    libzstd-dev \
+    libcurl4-gnutls-dev=7.64.0-4+deb10u1 \
+    libdap-dev=3.20.3-1 \
+    libexpat1-dev=2.2.6-2+deb10u1 \
+    libgeos-dev=3.7.1-1 \
+    libhdf4-dev=4.2.13-4 \
+    libhdf5-dev=1.10.4+repack-10 \
+    libjpeg-dev=1:1.5.2-2 \
+    libnetcdf-dev=1:4.6.2-1 \
+    libpq-dev=11.7-0+deb10u1 \
+    libproj-dev=5.2.0-1 \
+    libspatialite-dev=4.3.0a-5+b2 \
+    libsqlite3-dev=3.27.2-3 \
+    libssl-dev=1.1.1d-0+deb10u3 \
+    libwebp-dev=0.6.1-2 \
+    libxerces-c-dev=3.2.2+debian-1+b1 \
+    libzstd-dev=1.3.8+dfsg-3 \
     make \
     pkg-config && \
     apt clean && \
