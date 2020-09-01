@@ -13,23 +13,53 @@ env:
     - IMAGE_NAME="${DOCKER_ORG}/nansat_base"
     - DOCKER_TMP_TAG='tmp'
 
-install:
-  - docker pull "${IMAGE_NAME}" || true
+jobs:
+  include:
+    - stage: 'Build Docker images'
+      name: 'Build standard image'
+      install:
+        - docker pull "${IMAGE_NAME}" || true
+      script:
+        - >
+          docker build .
+          --cache-from "${IMAGE_NAME}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
+        # Basic test
+        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
+      before_deploy:
+        - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+      deploy:
+        provider: script
+        on:
+          tags: true
+        script: /bin/bash docker_push.sh "${IMAGE_NAME}" ''
 
-script:
-  - >
-    docker build .
-    --cache-from "${IMAGE_NAME}"
-    -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}"
-  # Basic test
-  - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}" python -c 'import gdal'
-
-before_deploy:
-  - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
-
-deploy:
-  provider: script
-  on:
-    tags: true
-  script: /bin/bash docker_push.sh "${TRAVIS_TAG#v}" latest
+    - name: 'Build slim image'
+      env:
+        - COMPILE_STAGE_SUFFIX='-compile-stage'
+        - SLIM_SUFFIX='-slim'
+      install:
+        - docker pull "${IMAGE_NAME}:latest${COMPILE_STAGE_SUFFIX}" || true
+        - docker pull "${IMAGE_NAME}:latest${SLIM_SUFFIX}" || true
+      script:
+        - >
+          docker build .
+          -f Dockerfile_slim --target builder
+          --cache-from "${IMAGE_NAME}:latest${COMPILE_STAGE_SUFFIX}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}${COMPILE_STAGE_SUFFIX}"
+        - >
+          docker build .
+          -f Dockerfile_slim
+          --cache-from "${IMAGE_NAME}:${DOCKER_TMP_TAG}${COMPILE_STAGE_SUFFIX}"
+          --cache-from "${IMAGE_NAME}:latest${SLIM_SUFFIX}"
+          -t "${IMAGE_NAME}:${DOCKER_TMP_TAG}${SLIM_SUFFIX}"
+        # Basic test
+        - docker run --rm "${IMAGE_NAME}:${DOCKER_TMP_TAG}${SLIM_SUFFIX}" python -c 'import gdal'
+      before_deploy:
+        - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+      deploy:
+        provider: script
+        on:
+          tags: true
+        script: /bin/bash docker_push.sh "${IMAGE_NAME}" "${COMPILE_STAGE_SUFFIX}" "${SLIM_SUFFIX}"
 ...

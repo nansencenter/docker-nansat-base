@@ -3,7 +3,7 @@ Docker image containing the dependencies for Nansat
 
 ## Usage
 
-This image is meant to be used as a base for building the [nansat](TODO) docker image, and for working on the [nansat](https://github.com/nansencenter/nansat) source code.
+This image is meant to be used as a base for building the [nansat](https://hub.docker.com/repository/docker/nansencenter/nansat) docker image, and for working on the [nansat](https://github.com/nansencenter/nansat) source code.
 
 To use it to run `nansat` from source, just mount your `nansat` repository when you run the container, and specify the PYTHONPATH variable.
 
@@ -19,5 +19,11 @@ Upon release, this image is automatically built and pushed to the Docker Hub [na
 
 Release tags should follow [semantic versioning](https://semver.org/).
 
-The image is also build, **but not pushed to the Docker Hub repository**, when new pull requests are created.
-In this case, tests are run using the `docker-compose.test.yml` file in order to validate the pull request.
+Two images are built:
+
+- the standard image is based on Anaconda. It makes it easy to maintain and relatively quick to
+  build, but very big.
+
+- the slim image does not rely on Anaconda, which makes it necessary to compile GDAL in the
+  dockerfile. It is much smaller than the standard image, but takes more time to build
+  (around 20 minutes for a first build, much quicker after that if the GDAL stage is not modified).
