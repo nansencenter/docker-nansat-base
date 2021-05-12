@@ -35,7 +35,7 @@ RUN conda install setuptools \
     urllib3=1.25.10 \
 &&  conda clean -a -y \
 &&  rm /opt/conda/pkgs/* -rf \
-&&  pip install pythesint==1.4.10 \
+&&  pip install pythesint==1.5.1 \
 &&  python -c 'import pythesint; pythesint.update_all_vocabularies()' \
 &&  wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw/master/MOD44W.tgz \
 &&  tar -xzf /usr/share/MOD44W/MOD44W.tgz -C /usr/share/MOD44W/ \

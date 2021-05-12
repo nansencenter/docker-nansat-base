@@ -22,4 +22,4 @@ dependencies:
   - scipy=1.5.2
   - urllib3=1.25.10
   - pip:
-      - pythesint==1.4.10
+      - pythesint==1.5.1
