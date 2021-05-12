@@ -5,7 +5,7 @@ Docker image containing the dependencies for Nansat
 
 This image is meant to be used as a base for building the [nansat](https://hub.docker.com/repository/docker/nansencenter/nansat) docker image, and for working on the [nansat](https://github.com/nansencenter/nansat) source code.
 
-To use it to run `nansat` from source, just mount your `nansat` repository when you run the container, and specify the PYTHONPATH variable.
+To use it to run `nansat` from source, just mount your `nansat` repository when you run the container, and specify the `PYTHONPATH` variable.
 
 For example, this command enables you to run an interactive `bash` shell inside the container, with `nansat` source code properly configured. Of course, you need to replace `<nansat_path>` with the path to your local `nansat` repository.
 
