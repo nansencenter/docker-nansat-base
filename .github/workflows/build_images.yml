@@ -1,5 +1,5 @@
 ---
-name: "Unit tests and build"
+name: "Build Docker images"
 on:
   push:
     branches: ['**']
