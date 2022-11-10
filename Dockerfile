@@ -16,7 +16,7 @@ RUN apt-get update \
 
 COPY environment.yml /tmp/environment.yml
 
-RUN conda install setuptools \
+RUN conda install python=3.7 setuptools \
 &&  conda update conda \
 &&  conda env update -n base --file /tmp/environment.yml \
 &&  rm /tmp/environment.yml \
