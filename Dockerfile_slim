@@ -3,6 +3,8 @@ FROM continuumio/miniconda3 as builder
 LABEL maintainer="Anton Korosov <anton.korosov@nersc.no>"
 LABEL purpose="Python libs for developing and running Nansat"
 
+ARG PYTHON_VERSION=3.7
+
 # Install build tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -10,6 +12,8 @@ RUN apt-get update && \
     wget
 
 COPY environment.yml /tmp/environment.yml
+RUN sed -i -E "s/^(\s+- python=).*$/\1${PYTHON_VERSION}/" /tmp/environment.yml
+
 RUN conda env create -f /tmp/environment.yml
 
 RUN wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw/master/MOD44W.tgz && \

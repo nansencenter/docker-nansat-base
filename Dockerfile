@@ -3,6 +3,8 @@ FROM continuumio/miniconda3
 LABEL maintainer="Anton Korosov <anton.korosov@nersc.no>"
 LABEL purpose="Python libs for developing and running Nansat"
 
+ARG PYTHON_VERSION=3.7
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/src \
     MOD44WPATH=/usr/share/MOD44W/
@@ -15,8 +17,10 @@ RUN apt-get update \
 &&  rm -rf /var/lib/apt/lists/*
 
 COPY environment.yml /tmp/environment.yml
+RUN sed -i -E "s/^(\s+- python=).*$/\1${PYTHON_VERSION}/" /tmp/environment.yml
 
-RUN conda install python=3.7 setuptools \
+RUN conda config --set solver classic \
+&&  conda install python="${PYTHON_VERSION}" setuptools \
 &&  conda update conda \
 &&  conda env update -n base --file /tmp/environment.yml \
 &&  rm /tmp/environment.yml \

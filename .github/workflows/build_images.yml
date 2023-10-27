@@ -10,6 +10,13 @@ env:
 jobs:
   build_standard_docker_image:
     runs-on: 'ubuntu-20.04'
+    strategy:
+      matrix:
+        python_version:
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v2
@@ -18,9 +25,9 @@ jobs:
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]];then
-            TAG="${GITHUB_REF#refs/tags/}"
+            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.python_version }}"
           else
-            TAG='tmp'
+            TAG='tmp-python${{ matrix.python_version }}'
           fi
           echo "::set-output name=VERSION::${TAG}"
 
@@ -46,6 +53,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          build-args: 'PYTHON_VERSION=${{ matrix.python_version }}'
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: |
             ${{ env.IMAGE_NAME }}:latest
@@ -63,6 +71,13 @@ jobs:
 
   build_slim_docker_image:
     runs-on: 'ubuntu-20.04'
+    strategy:
+      matrix:
+        python_version:
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v2
@@ -71,9 +86,9 @@ jobs:
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]];then
-            TAG="${GITHUB_REF#refs/tags/}"
+            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.python_version }}"
           else
-            TAG='tmp'
+            TAG='tmp-python${{ matrix.python_version }}'
           fi
           echo "::set-output name=VERSION::${TAG}"
 
@@ -99,6 +114,7 @@ jobs:
         with:
           context: .
           file: Dockerfile_slim
+          build-args: 'PYTHON_VERSION=${{ matrix.python_version }}'
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: |
             ${{ env.IMAGE_NAME }}:latest-slim
