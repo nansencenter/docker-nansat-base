@@ -14,13 +14,12 @@ RUN apt-get update && \
 COPY environment.yml /tmp/environment.yml
 RUN sed -i -E "s/^(\s+- python=).*$/\1${PYTHON_VERSION}/" /tmp/environment.yml
 
-RUN conda config --set channel_priority strict \
-&&  conda env create -f /tmp/environment.yml
+RUN conda env create -f /tmp/environment.yml
 
 RUN wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw/master/MOD44W.tgz && \
     tar -xzf /usr/share/MOD44W/MOD44W.tgz -C /usr/share/MOD44W/
 
-RUN conda install conda-pack && \
+RUN pip install conda-pack && \
     conda-pack -n environment -o /tmp/env.tar && \
     mkdir /venv && tar -C /venv -xf /tmp/env.tar && \
     /venv/bin/conda-unpack
