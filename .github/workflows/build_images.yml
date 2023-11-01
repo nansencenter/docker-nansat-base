@@ -12,11 +12,11 @@ jobs:
     runs-on: 'ubuntu-20.04'
     strategy:
       matrix:
-        python_version:
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
+        versions:
+          - {'python': '3.7', 'extra_tags': ['latest']}
+          - {'python': '3.8', 'extra_tags': []}
+          - {'python': '3.9', 'extra_tags': []}
+          - {'python': '3.10', 'extra_tags': []}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -25,9 +25,9 @@ jobs:
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]];then
-            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.python_version }}"
+            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.versions.python }}"
           else
-            TAG='tmp-python${{ matrix.python_version }}'
+            TAG='tmp-python${{ matrix.versions.python }}'
           fi
           echo "::set-output name=VERSION::${TAG}"
 
@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-standard-python${{ matrix.python_version }}-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-standard-python${{ matrix.versions.python }}-${{ github.sha }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -51,11 +51,12 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          build-args: 'PYTHON_VERSION=${{ matrix.python_version }}'
+          build-args: 'PYTHON_VERSION=${{ matrix.versions.python }}'
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:latest-python${{ matrix.versions.python }}
             ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}
+            ${{ join(matrix.versions.extra_tags, '\n') }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -71,11 +72,11 @@ jobs:
     runs-on: 'ubuntu-20.04'
     strategy:
       matrix:
-        python_version:
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
+        versions:
+          - {'python': '3.7', 'extra_tags': ['latest-slim']}
+          - {'python': '3.8', 'extra_tags': []}
+          - {'python': '3.9', 'extra_tags': []}
+          - {'python': '3.10', 'extra_tags': []}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -84,9 +85,9 @@ jobs:
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]];then
-            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.python_version }}"
+            TAG="${GITHUB_REF#refs/tags/}-python${{ matrix.versions.python }}"
           else
-            TAG='tmp-python${{ matrix.python_version }}'
+            TAG='tmp-python${{ matrix.versions.python }}'
           fi
           echo "::set-output name=VERSION::${TAG}"
 
@@ -97,7 +98,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-slim-python${{ matrix.python_version }}-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-slim-python${{ matrix.versions.python }}-${{ github.sha }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -110,11 +111,12 @@ jobs:
         with:
           context: .
           file: Dockerfile_slim
-          build-args: 'PYTHON_VERSION=${{ matrix.python_version }}'
+          build-args: 'PYTHON_VERSION=${{ matrix.versions.python }}'
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: |
-            ${{ env.IMAGE_NAME }}:latest-slim
+            ${{ env.IMAGE_NAME }}:latest-slim-python${{ matrix.versions.python }}
             ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}-slim
+            ${{ join(matrix.versions.extra_tags, '\n') }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
