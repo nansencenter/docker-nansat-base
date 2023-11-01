@@ -39,6 +39,8 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-standard-python${{ matrix.versions.python }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-standard-python${{ matrix.versions.python }}-
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -99,6 +101,8 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-slim-python${{ matrix.versions.python }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-slim-python${{ matrix.versions.python }}-
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
