@@ -19,8 +19,7 @@ RUN apt-get update \
 COPY environment.yml /tmp/environment.yml
 RUN sed -i -E "s/^(\s+- python=).*$/\1${PYTHON_VERSION}/" /tmp/environment.yml
 
-RUN conda config --set channel_priority strict \
-&&  conda install -n base conda-libmamba-solver \
+RUN conda install -n base conda-libmamba-solver \
 &&  conda config --set solver libmamba \
 &&  conda install python="${PYTHON_VERSION}" setuptools \
 &&  conda update conda \
