@@ -59,7 +59,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
             ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}-python${{ matrix.version.python }}
-            ${{ matrix.version.latest && 'latest' || '' }}
+            ${{ matrix.version.latest && format('{0}:latest', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
@@ -75,7 +75,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest-slim-python${{ matrix.version.python }}
             ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}-slim-python${{ matrix.version.python }}
-            ${{ matrix.version.latest && 'latest-slim' || '' }}
+            ${{ matrix.version.latest && format('{0}:latest-slim', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
