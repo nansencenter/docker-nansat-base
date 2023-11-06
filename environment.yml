@@ -2,6 +2,7 @@
 name: environment
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - cartopy=0
   - coverage=6
