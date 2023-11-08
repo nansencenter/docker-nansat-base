@@ -79,6 +79,7 @@ jobs:
             ${{ matrix.version.latest && format('{0}:latest-slim', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
+            type=local,src=/tmp/.buildx-cache-new
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
         # Temp fix
