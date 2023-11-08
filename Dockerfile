@@ -16,12 +16,9 @@ RUN apt-get update \
 &&  apt clean \
 &&  rm -rf /var/lib/apt/lists/*
 
-COPY environment.yml /tmp/environment.yml
-RUN sed -i -E "s/^(\s+- python=).*$/\1${PYTHON_VERSION}/" /tmp/environment.yml
+COPY environment-${PYTHON_VERSION}.yml /tmp/environment.yml
 
-RUN conda install python="${PYTHON_VERSION}" setuptools \
-&&  conda update conda \
-&&  conda env update -n base --file /tmp/environment.yml \
+RUN conda env update -n base --file /tmp/environment.yml \
 &&  rm /tmp/environment.yml \
 &&  conda clean -a -y \
 &&  rm /opt/conda/pkgs/* -rf

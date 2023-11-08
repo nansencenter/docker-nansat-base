@@ -13,10 +13,11 @@ jobs:
     strategy:
       matrix:
         version:
-          - {'python': '3.7', 'latest': true}
+          - {'python': '3.7', 'latest': false}
           - {'python': '3.8', 'latest': false}
           - {'python': '3.9', 'latest': false}
           - {'python': '3.10', 'latest': false}
+          - {'python': '3.11', 'latest': true}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
