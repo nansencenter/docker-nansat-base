@@ -7,6 +7,7 @@ on:
     types: [released]
 env:
   IMAGE_NAME: "${{ secrets.DOCKER_ORG }}/nansat_base"
+  TAG: "${{ github.ref_type == 'tag' && github.ref_name || 'tmp' }}"
 jobs:
   build_docker_images:
     runs-on: 'ubuntu-20.04'
@@ -21,16 +22,6 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
-
-      - name: "Extract tag name"
-        id: get_version
-        run: |
-          if [[ $GITHUB_REF == refs/tags/* ]];then
-            TAG="${GITHUB_REF#refs/tags/}"
-          else
-            TAG='tmp'
-          fi
-          echo "VERSION=${TAG}" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -56,10 +47,10 @@ jobs:
           file: Dockerfile
           target: 'standard'
           build-args: 'PYTHON_VERSION=${{ matrix.version.python }}'
-          push: ${{ startsWith(github.ref, 'refs/tags/') }}
+          push: ${{ github.ref_type == 'tag' }}
           tags: |
             ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
-            ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}-python${{ matrix.version.python }}
+            ${{ env.IMAGE_NAME }}:${{ env.TAG }}-python${{ matrix.version.python }}
             ${{ matrix.version.latest && format('{0}:latest', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
@@ -72,10 +63,10 @@ jobs:
           file: Dockerfile
           target: 'slim'
           build-args: 'PYTHON_VERSION=${{ matrix.version.python }}'
-          push: ${{ startsWith(github.ref, 'refs/tags/') }}
+          push: ${{ github.ref_type == 'tag' }}
           tags: |
             ${{ env.IMAGE_NAME }}:latest-slim-python${{ matrix.version.python }}
-            ${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.VERSION }}-slim-python${{ matrix.version.python }}
+            ${{ env.IMAGE_NAME }}:${{ env.TAG }}-slim-python${{ matrix.version.python }}
             ${{ matrix.version.latest && format('{0}:latest-slim', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
