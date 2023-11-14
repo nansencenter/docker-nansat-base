@@ -29,6 +29,10 @@ RUN wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw
 &&  tar -xzf /usr/share/MOD44W/MOD44W.tgz -C /usr/share/MOD44W/ \
 &&  rm /usr/share/MOD44W/MOD44W.tgz
 
+ENV GDAL_DRIVER_PATH=/opt/conda/lib/gdalplugins
+ENV GDAL_DATA=/opt/conda/share/gdal
+ENV PROJ_LIB=/opt/conda/share/proj
+
 WORKDIR /src
 
 
@@ -52,5 +56,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/src
 ENV MOD44WPATH=/usr/share/MOD44W
+ENV GDAL_DRIVER_PATH=/venv/lib/gdalplugins
+ENV GDAL_DATA=/venv/share/gdal
+ENV PROJ_LIB=/venv/share/proj
 
 WORKDIR /src
