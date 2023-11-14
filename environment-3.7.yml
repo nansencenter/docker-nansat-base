@@ -11,7 +11,6 @@ dependencies:
   - coveralls=1.7.0
   - gdal=3.6.0
   - ipython=7.31.1
-  - libgdal=3.6.0
   - matplotlib-base=3.5.3
   - mock=4.0.3
   - netcdf4=1.6.2
