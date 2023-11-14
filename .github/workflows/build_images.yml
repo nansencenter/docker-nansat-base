@@ -54,6 +54,7 @@ jobs:
             ${{ matrix.version.latest && format('{0}:latest', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
+            ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       - name: Build slim docker image
@@ -71,6 +72,8 @@ jobs:
           cache-from: |
             type=local,src=/tmp/.buildx-cache
             type=local,src=/tmp/.buildx-cache-new
+            ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
+            ${{ env.IMAGE_NAME }}:${{ env.TAG }}-slim-python${{ matrix.version.python }}
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
         # Temp fix
