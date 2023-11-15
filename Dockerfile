@@ -13,6 +13,7 @@ RUN apt-get update \
 &&  apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
+    libxau6 \
 &&  apt clean \
 &&  rm -rf /var/lib/apt/lists/*
 
