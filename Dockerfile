@@ -49,6 +49,7 @@ FROM debian:buster as slim
 
 COPY --from=slim_builder /usr/share/MOD44W /usr/share/MOD44W
 COPY --from=slim_builder /venv /venv
+COPY --from=slim_builder /usr/lib/x86_64-linux-gnu/libXau.so.6* /usr/lib/x86_64-linux-gnu
 RUN mkdir -p "/root/.local/share/pythesint"
 COPY --from=slim_builder "/root/.local/share/pythesint" "/root/.local/share/pythesint"
 
