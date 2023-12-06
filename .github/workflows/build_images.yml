@@ -40,12 +40,11 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
 
-      - name: Build standard docker image
+      - name: Build docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
-          target: 'standard'
           build-args: 'PYTHON_VERSION=${{ matrix.version.python }}'
           push: ${{ github.ref_type == 'tag' }}
           tags: |
@@ -55,26 +54,6 @@ jobs:
           cache-from: |
             type=local,src=/tmp/.buildx-cache
             ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
-
-      - name: Build slim docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile
-          target: 'slim'
-          build-args: 'PYTHON_VERSION=${{ matrix.version.python }}'
-          push: ${{ github.ref_type == 'tag' }}
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest-slim-python${{ matrix.version.python }}
-            ${{ matrix.version.latest && format('{0}:{1}{2}', env.IMAGE_NAME, github.ref_name, matrix.tag_suffix) || '' }}
-            ${{ env.IMAGE_NAME }}:${{ github.ref_name }}-slim-python${{ matrix.version.python }}
-            ${{ matrix.version.latest && format('{0}:latest-slim', env.IMAGE_NAME) || '' }}
-          cache-from: |
-            type=local,src=/tmp/.buildx-cache
-            type=local,src=/tmp/.buildx-cache-new
-            ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
-            ${{ env.IMAGE_NAME }}:${{ github.ref_name }}-slim-python${{ matrix.version.python }}
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
         # Temp fix

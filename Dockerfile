@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3 as standard
+FROM continuumio/miniconda3
 
 LABEL maintainer="Anton Korosov <anton.korosov@nersc.no>"
 LABEL purpose="Python libs for developing and running Nansat"
@@ -33,33 +33,5 @@ RUN wget -nc -nv -P /usr/share/MOD44W https://github.com/nansencenter/mod44w/raw
 ENV GDAL_DRIVER_PATH=/opt/conda/lib/gdalplugins
 ENV GDAL_DATA=/opt/conda/share/gdal
 ENV PROJ_LIB=/opt/conda/share/proj
-
-WORKDIR /src
-
-
-FROM standard as slim_builder
-
-RUN pip install conda-pack \
-&&  conda create --name to_pack --clone base \
-&&  conda-pack -n to_pack -o /tmp/env.tar \
-&&  mkdir /venv && tar -C /venv -xf /tmp/env.tar \
-&&  /venv/bin/conda-unpack
-
-FROM debian:buster as slim
-
-COPY --from=slim_builder /usr/share/MOD44W /usr/share/MOD44W
-COPY --from=slim_builder /venv /venv
-COPY --from=slim_builder /usr/lib/x86_64-linux-gnu/libXau.so.6* /usr/lib/x86_64-linux-gnu
-RUN mkdir -p "/root/.local/share/pythesint"
-COPY --from=slim_builder "/root/.local/share/pythesint" "/root/.local/share/pythesint"
-
-ENV VIRTUAL_ENV='/venv'
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/src
-ENV MOD44WPATH=/usr/share/MOD44W
-ENV GDAL_DRIVER_PATH=/venv/lib/gdalplugins
-ENV GDAL_DATA=/venv/share/gdal
-ENV PROJ_LIB=/venv/share/proj
 
 WORKDIR /src
