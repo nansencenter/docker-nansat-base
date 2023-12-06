@@ -5,6 +5,8 @@ channels:
 dependencies:
   - python=3.8.18
   - conda=23.9.0
+  - nomkl=3.0
+  - openblas=0.3.21
 
   - cartopy=0.18.0
   - coverage=5.5
