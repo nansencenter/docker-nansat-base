@@ -19,10 +19,12 @@ RUN apt-get update \
 
 COPY environment-${PYTHON_VERSION}.yml /tmp/environment.yml
 
-RUN conda env update -n base --file /tmp/environment.yml \
+RUN conda env update -n base --file /tmp/environment.yml --prune \
 &&  rm /tmp/environment.yml \
-&&  conda clean -a -y \
-&&  rm /opt/conda/pkgs/* -rf
+&&  conda clean -a -y -f \
+&&  rm /opt/conda/pkgs/* -rf \
+&& find /opt/conda/ -follow -type f -name '*.a' -delete \
+&& find /opt/conda/ -follow -type f -name '*.pyc' -delete
 
 RUN python -c 'import pythesint; pythesint.update_all_vocabularies()'
 
