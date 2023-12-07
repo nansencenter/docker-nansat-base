@@ -54,7 +54,6 @@ jobs:
             ${{ matrix.version.latest && format('{0}:latest', env.IMAGE_NAME) || '' }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
-            ${{ env.IMAGE_NAME }}:latest-python${{ matrix.version.python }}
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
         # Temp fix
