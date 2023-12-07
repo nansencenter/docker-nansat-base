@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:23.9.0-0
 
 LABEL maintainer="Anton Korosov <anton.korosov@nersc.no>"
 LABEL purpose="Python libs for developing and running Nansat"
