@@ -1,5 +1,6 @@
 # docker-nansat-base
-Docker image containing the dependencies for Nansat
+
+Docker image containing the dependencies for Nansat installed in an [Anaconda](https://www.anaconda.com/) environment.
 
 ## Usage
 
@@ -19,11 +20,4 @@ Upon release, this image is automatically built and pushed to the Docker Hub [na
 
 Release tags should follow [semantic versioning](https://semver.org/).
 
-Two images are built:
-
-- the standard image is based on Anaconda. It makes it easy to maintain and relatively quick to
-  build, but very big.
-
-- the slim image does not rely on Anaconda, which makes it necessary to compile GDAL in the
-  dockerfile. It is much smaller than the standard image, but takes more time to build
-  (around 20 minutes for a first build, much quicker after that if the GDAL stage is not modified).
+Several versions of the image are built: one per Python version from 3.7 to 3.11.
