@@ -20,7 +20,7 @@ dependencies:
   - numpy-base=1.26.0
   - pillow=10.0.1
   - pip=23.3
-  - PyYAML=5.4.1
+  - PyYAML=6.0.1
   - scipy=1.11.3
   - setuptools=68.0.0
   - shapely=1.8.4
