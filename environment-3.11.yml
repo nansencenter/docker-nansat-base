@@ -27,4 +27,4 @@ dependencies:
   - setuptools=68.0.0
   - urllib3=2.0.3
   - pip:
-      - pythesint==1.6.6
+      - pythesint==1.7.2

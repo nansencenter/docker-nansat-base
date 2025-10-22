@@ -4,13 +4,13 @@ on:
   push:
     branches: ['**']
   release:
-    types: [released]
+    types: [prereleased, released]
 env:
   IMAGE_NAME: "${{ secrets.DOCKER_ORG }}/nansat_base"
   TAG: "${{ github.ref_type == 'tag' && github.ref_name || 'tmp' }}"
 jobs:
   build_docker_images:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-latest'
     env:
       latest: ${{ matrix.python_version == '3.11' && 'true' || '' }}
     strategy:
