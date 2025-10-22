@@ -4,7 +4,7 @@ on:
   push:
     branches: ['**']
   release:
-    types: [released]
+    types: [prereleased, released]
 env:
   IMAGE_NAME: "${{ secrets.DOCKER_ORG }}/nansat_base"
   TAG: "${{ github.ref_type == 'tag' && github.ref_name || 'tmp' }}"
